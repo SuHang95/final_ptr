@@ -27,8 +27,8 @@ namespace su{
 	template<typename T>
     final_ptr<T>::final_ptr(){
         ptr=nullptr;
-		__ref_count=new std::atomic<int>(1);
-		assigned=false;
+	    __ref_count=new std::atomic<int>(1);
+	    assigned=false;
     }
 
     template<typename T>
@@ -37,7 +37,7 @@ namespace su{
         if(ptr!=nullptr){
 		    assigned=true;
         }else{
-            assigned=false;
+		    assigned=false;
         }
     }
 
@@ -45,7 +45,7 @@ namespace su{
     final_ptr<T>::final_ptr(const final_ptr<T>& other){
         if(other.assigned.load()){
             other.__ref_count->fetch_add(1);
-			assigned=true;
+            assigned=true;
         }
         ptr=other.ptr;
         __ref_count=other.__ref_count;
@@ -53,21 +53,21 @@ namespace su{
 
     template<typename T>
     final_ptr<T>& final_ptr<T>::operator=(const final_ptr<T>& other){
-        if(!assigned.load()){
-            throw std::runtime_error("Try to assigned value to a instance" 
-                "which is protected by final ptr!");
+        if(assigned.load()){
+	        throw std::runtime_error("Try to assigned value to a instance" 
+	        "which is protected by final ptr!");
         }
         if(other.assigned.load()){
-            other.__ref_count->fetch_add(1);
-			assigned=true;
-        }
-        ptr=other.ptr;
-        __ref_count=other.__ref_count;
+		    other.__ref_count->fetch_add(1);
+		    assigned=true;
+	    }
+	    ptr=other.ptr;
+	    __ref_count=other.__ref_count;
     }
 
 	template<typename T>
     final_ptr<T>& final_ptr<T>::operator=(T* ptr){
-        if(!assigned.load()){
+        if(assigned.load()){
             throw std::runtime_error("Try to assigned value to a instance" 
                 "which is protected by final ptr!");
         }

@@ -1,1 +1,1 @@
-g++ -o test -std=c++11 test.cpp
+g++ -g -o test -std=c++11 test.cpp
